@@ -54,10 +54,18 @@
     return colors[tag] || colors.default;
   }
 </script>
-<div class="relative"> <!-- Added wrapper div -->
-  <div 
-    class="bg-up-card rounded-lg shadow-lg p-6 transition-all duration-200 hover:bg-up-hover border border-white/5 cursor-pointer"
+<div class="relative">
+  <button 
+    class="w-full text-left bg-up-card rounded-lg shadow-lg p-6 transition-all duration-200 hover:bg-up-hover border border-white/5"
     on:click={toggleCard}
+    on:keydown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleCard();
+      }
+    }}
+    aria-expanded={isExpanded}
+    aria-controls={`transactions-${accountId}`}
   >
     <div class="flex justify-between items-start">
       <h3 class="text-lg font-medium text-up-text-primary">{name}</h3>
@@ -67,6 +75,7 @@
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
+        aria-hidden="true"
       >
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
@@ -76,54 +85,55 @@
       <span class="text-up-text-secondary text-sm mr-1">{currencyCode}</span>
       <span class="text-up-orange">{balance}</span>
     </p>
+  </button>
 
-    {#if isExpanded}
-      <div 
-        transition:slide={{ duration: 300 }}
-        class="mt-6 space-y-4 border-t border-white/10 pt-4"
-      >
-        <h4 class="text-sm font-medium text-up-text-secondary">Recent Transactions</h4>
-        
-        {#if isLoading}
-          <div class="animate-pulse space-y-3">
-            {#each Array(4) as _}
-              <div class="h-12 bg-up-hover rounded"></div>
-            {/each}
-          </div>
-        {:else if error}
-          <p class="text-red-400 text-sm">{error}</p>
-        {:else}
-          <div class="space-y-3">
-            {#each transactions as transaction}
-              <div 
-                class="flex justify-between items-start py-2 text-sm"
-                in:slide={{ duration: 200, delay: 100 }}
-              >
-                <div>
-                  <p class="text-up-text-primary">{transaction.attributes.description}</p>
-                  <div class="flex items-center gap-2 mt-1">
-                    <p class="text-up-text-secondary text-xs">
-                      {formatDate(transaction.attributes.createdAt)}
-                    </p>
-                    {#if transaction.relationships?.tags?.data?.length > 0}
-                      <div class="flex gap-1">
-                        {#each transaction.relationships.tags.data as tag}
-                          <span class={`text-xs px-2 py-0.5 rounded-full ${getTagColor(tag.id)}`}>
-                            {tag.id}
-                          </span>
-                        {/each}
-                      </div>
-                    {/if}
-                  </div>
+  {#if isExpanded}
+    <div 
+      id="transactions-{accountId}"
+      transition:slide={{ duration: 300 }}
+      class="mt-6 space-y-4 border-t border-white/10 pt-4"
+    >
+      <h4 class="text-sm font-medium text-up-text-secondary">Recent Transactions</h4>
+      
+      {#if isLoading}
+        <div class="animate-pulse space-y-3">
+          {#each Array(4) as _}
+            <div class="h-12 bg-up-hover rounded"></div>
+          {/each}
+        </div>
+      {:else if error}
+        <p class="text-red-400 text-sm">{error}</p>
+      {:else}
+        <div class="space-y-3">
+          {#each transactions as transaction}
+            <div 
+              class="flex justify-between items-start py-2 text-sm"
+              in:slide={{ duration: 200, delay: 100 }}
+            >
+              <div>
+                <p class="text-up-text-primary">{transaction.attributes.description}</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <p class="text-up-text-secondary text-xs">
+                    {formatDate(transaction.attributes.createdAt)}
+                  </p>
+                  {#if transaction.relationships?.tags?.data?.length > 0}
+                    <div class="flex gap-1">
+                      {#each transaction.relationships.tags.data as tag}
+                        <span class={`text-xs px-2 py-0.5 rounded-full ${getTagColor(tag.id)}`}>
+                          {tag.id}
+                        </span>
+                      {/each}
+                    </div>
+                  {/if}
                 </div>
-                <p class="font-medium" class:text-red-400={transaction.attributes.amount.valueInBaseUnits < 0}>
-                  {transaction.attributes.amount.value}
-                </p>
               </div>
-            {/each}
-          </div>
-        {/if}
-      </div>
-    {/if}
-  </div>
+              <p class="font-medium" class:text-red-400={transaction.attributes.amount.valueInBaseUnits < 0}>
+                {transaction.attributes.amount.value}
+              </p>
+            </div>
+          {/each}
+        </div>
+      {/if}
+    </div>
+  {/if}
 </div>
