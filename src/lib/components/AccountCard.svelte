@@ -37,6 +37,21 @@
       day: 'numeric'
     });
   }
+
+  // Add a function to get tag background color
+  function getTagColor(tagName: string): string {
+    // You can customize these colors or add more based on your needs
+    const colors: Record<string, string> = {
+      food: 'bg-blue-500/20 text-blue-300',
+      transport: 'bg-green-500/20 text-green-300',
+      shopping: 'bg-purple-500/20 text-purple-300',
+      bills: 'bg-red-500/20 text-red-300',
+      default: 'bg-gray-500/20 text-gray-300'
+    };
+    
+    const tag = tagName.toLowerCase();
+    return colors[tag] || colors.default;
+  }
 </script>
 
 <div 
@@ -78,12 +93,23 @@
       {:else}
         <div class="space-y-3">
           {#each transactions as transaction}
-            <div class="flex justify-between items-center py-2 text-sm">
+            <div class="flex justify-between items-start py-2 text-sm">
               <div>
                 <p class="text-up-text-primary">{transaction.attributes.description}</p>
-                <p class="text-up-text-secondary text-xs">
-                  {formatDate(transaction.attributes.createdAt)}
-                </p>
+                <div class="flex items-center gap-2 mt-1">
+                  <p class="text-up-text-secondary text-xs">
+                    {formatDate(transaction.attributes.createdAt)}
+                  </p>
+                  {#if transaction.relationships?.tags?.data?.length > 0}
+                    <div class="flex gap-1">
+                      {#each transaction.relationships.tags.data as tag}
+                        <span class={`text-xs px-2 py-0.5 rounded-full ${getTagColor(tag.id)}`}>
+                          {tag.id}
+                        </span>
+                      {/each}
+                    </div>
+                  {/if}
+                </div>
               </div>
               <p class="font-medium" class:text-red-400={transaction.attributes.amount.valueInBaseUnits < 0}>
                 {transaction.attributes.amount.value}
