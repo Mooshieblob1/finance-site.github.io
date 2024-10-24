@@ -22,7 +22,14 @@
 <div class="min-h-screen bg-up-dark text-up-text-primary">
   <main class="container mx-auto px-4 py-8">
     <div class="mb-8">
-      <UpLogo size="w-12 h-12" />
+      <a 
+        href="https://up.com.au" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="inline-block hover:opacity-80 transition-opacity duration-200"
+      >
+        <UpLogo size="w-12 h-12" />
+      </a>
       <h1 class="sr-only">Up Bank Dashboard</h1>
     </div>
 
