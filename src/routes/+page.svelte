@@ -1,18 +1,17 @@
 <script lang="ts">
-  import "../app.css";
   import { onMount } from 'svelte';
-  import { UpbankClient } from '$lib/upbank';
+  import "../app.css";
   import AccountCard from '$lib/components/AccountCard.svelte';
-  import { env } from '$env/dynamic/private';
+  import UpLogo from '$lib/components/UpLogo.svelte';
 
-  const upbank = new UpbankClient(env.UPBANK_TOKEN);
   let accounts: Array<any> = [];
   let error: string | null = null;
 
   onMount(async () => {
     try {
-      const response = await upbank.getAccounts();
-      accounts = response.data;
+      const response = await fetch('/api/accounts');
+      if (!response.ok) throw new Error('Failed to fetch accounts');
+      accounts = await response.json();
     } catch (e) {
       error = 'Failed to load accounts';
       console.error(e);
@@ -20,14 +19,15 @@
   });
 </script>
 
-<div class="min-h-screen bg-gray-100">
+<div class="min-h-screen bg-up-dark text-up-text-primary">
   <main class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-8">
-      Up Bank Dashboard
-    </h1>
+    <div class="mb-8">
+      <UpLogo size="w-12 h-12" />
+      <h1 class="sr-only">Up Bank Dashboard</h1>
+    </div>
 
     {#if error}
-      <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-4">
+      <div class="bg-red-900/50 text-red-200 p-4 rounded-lg mb-4 border border-red-700">
         {error}
       </div>
     {/if}
@@ -38,6 +38,7 @@
           name={account.attributes.displayName}
           balance={account.attributes.balance.value}
           currencyCode={account.attributes.balance.currencyCode}
+          accountId={account.id}
         />
       {/each}
     </div>

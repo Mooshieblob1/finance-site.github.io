@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-up-dark antialiased;
+  }
+}
+
+@layer components {
+  /* Add any custom component classes here */
+  .up-gradient-bg {
+    background: linear-gradient(to bottom right, #292f3f, #1e2230);
+  }
+
+  .up-card-hover {
+    @apply transition-all duration-200 hover:bg-up-hover hover:scale-[1.02];
+  }
+}
