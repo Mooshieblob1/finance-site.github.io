@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import "../app.css";
   import AccountCard from '$lib/components/AccountCard.svelte';
   import UpLogo from '$lib/components/UpLogo.svelte';
   import TransferModal from '../lib/components/TransferModal.svelte';
@@ -55,43 +54,41 @@
   }
 </script>
 
-<div class="min-h-screen bg-up-dark text-up-text-primary">
-  <main class="container mx-auto px-4 py-8">
-    <div class="mb-8 flex justify-between items-center">
-      <a 
-        href="https://up.com.au" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        class="inline-block hover:opacity-80 transition-opacity duration-200"
-      >
-        <UpLogo size="w-12 h-12" />
-      </a>
-      <button
-        class="bg-up-orange text-white px-4 py-2 rounded-lg hover:bg-up-orange/90 transition-colors"
-        on:click={() => showTransferModal = true}
-      >
-        Transfer Money
-      </button>
-    </div>
+<main class="container mx-auto px-4 py-8">
+  <div class="mb-8 flex justify-between items-center">
+    <a 
+      href="https://up.com.au" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="inline-block hover:opacity-80 transition-opacity duration-200"
+    >
+      <UpLogo size="w-12 h-12" />
+    </a>
+    <button
+      class="bg-up-orange text-white px-4 py-2 rounded-lg hover:bg-up-orange/90 transition-colors"
+      on:click={() => showTransferModal = true}
+    >
+      Transfer Money
+    </button>
+  </div>
 
-    {#if error}
-      <div class="bg-red-900/50 text-red-200 p-4 rounded-lg mb-4 border border-red-700">
-        {error}
-      </div>
-    {/if}
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {#each accounts as account}
-        <AccountCard
-          name={account.attributes.displayName}
-          balance={account.attributes.balance.value}
-          currencyCode={account.attributes.balance.currencyCode}
-          accountId={account.id}
-        />
-      {/each}
+  {#if error}
+    <div class="bg-red-900/50 text-red-200 p-4 rounded-lg mb-4 border border-red-700">
+      {error}
     </div>
-  </main>
-</div>
+  {/if}
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {#each accounts as account}
+      <AccountCard
+        name={account.attributes.displayName}
+        balance={account.attributes.balance.value}
+        currencyCode={account.attributes.balance.currencyCode}
+        accountId={account.id}
+      />
+    {/each}
+  </div>
+</main>
 
 <TransferModal
   bind:show={showTransferModal}
