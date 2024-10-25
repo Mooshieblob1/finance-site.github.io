@@ -85,7 +85,7 @@
 {#if show}
   <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
     <div class="bg-up-card rounded-lg p-6 max-w-md w-full mx-4">
-      <h2 class="text-xl font-bold text-up-text-primary mb-4">Transfer Money</h2>
+      <h2 class="text-xl font-bold text-up-text-primary mb-4">Transfer Money [WIP until Up adds it to their API]</h2>
       
       {#if error}
         <div class="bg-red-900/50 text-red-200 p-3 rounded mb-4">
